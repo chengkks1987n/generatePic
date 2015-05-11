@@ -29,13 +29,11 @@ import java.awt.Color;
 import java.io.File;
 import java.io.IOException;
 
-public class MainFrame {
-
-	private GeneratePic gp = new GeneratePic();
-	BufferedImage bi = null;
+public class MainFrame {	
+	private SettingDialog dialog = null;
+	private BufferedImage bi = null;
 
 	private JFrame frame;
-	private JTextField textField;
 
 	/**
 	 * Launch the application.
@@ -57,6 +55,7 @@ public class MainFrame {
 	 * Create the application.
 	 */
 	public MainFrame() {
+		dialog = new SettingDialog();		
 		initialize();
 	}
 
@@ -73,7 +72,7 @@ public class MainFrame {
 		lblNewLabel.setBounds(10, 14, 61, 15);
 		frame.getContentPane().add(lblNewLabel);
 
-		textField = new JTextField();
+		final JTextField textField = new JTextField();
 		textField.setBounds(41, 10, 331, 23);
 		frame.getContentPane().add(textField);
 		textField.setColumns(10);
@@ -90,7 +89,7 @@ public class MainFrame {
 		JButton btnGenerate = new JButton("生成");
 		btnGenerate.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				bi = gp.generate(textField.getText());
+				bi = dialog.getGP().generate(textField.getText());
 				ImageIcon icon = new ImageIcon(bi);
 				lblPic.setIcon(icon);
 			}
@@ -104,10 +103,12 @@ public class MainFrame {
 				if (bi != null) {
 					try {
 						JFileChooser save = new JFileChooser();
-						save.setFileFilter(new FileNameExtensionFilter("GIF文件", "gif"));						
+						save.setFileFilter(new FileNameExtensionFilter("GIF文件",
+								"gif"));
 						if (JFileChooser.APPROVE_OPTION == save
-								.showSaveDialog(frame)) {							
-							ImageIO.write(bi, "gif", new File(save.getSelectedFile().getPath()+".gif"));
+								.showSaveDialog(frame)) {
+							ImageIO.write(bi, "gif", new File(save
+									.getSelectedFile().getPath() + ".gif"));
 						}
 					} catch (IOException e) {
 						// TODO Auto-generated catch block
@@ -118,6 +119,14 @@ public class MainFrame {
 		});
 		btnSave.setBounds(372, 229, 62, 23);
 		frame.getContentPane().add(btnSave);
+		
+		JButton btnSet = new JButton("设置");
+		btnSet.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				dialog.setVisible(true);
+			}
+		});
+		btnSet.setBounds(9, 229, 62, 23);
+		frame.getContentPane().add(btnSet);
 	}
-
 }
